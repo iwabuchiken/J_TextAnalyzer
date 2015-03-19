@@ -1,6 +1,14 @@
 package ta.main;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 public class CSVLoader {
 	 
@@ -91,7 +99,7 @@ public class CSVLoader {
                 if (null != nextLine) {
                     int index = 1;
                     for (String string : nextLine) {
-                        date = DateUtil.convertToDate(string);
+//                        date = DateUtil.convertToDate(string);
                         if (null != date) {
                             ps.setDate(index++, new java.sql.Date(date
                                     .getTime()));

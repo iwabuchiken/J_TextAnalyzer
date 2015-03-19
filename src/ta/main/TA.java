@@ -1,19 +1,195 @@
 package ta.main;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.TreeMap;
+
+import org.apache.commons.lang.StringUtils;
+
+import ta.utils.CONS;
+import au.com.bytecode.opencsv.CSVReader;
 
 public class TA {
 
 	private static String JDBC_CONNECTION_URL = 
             "jdbc:oracle:thin:SCOTT/TIGER@localhost:1500:MyDB";
 	
-	public static void main(String[] args) {
+	public static void 
+	main(String[] args) {
 		// TODO Auto-generated method stub
 
 		String msg;
+		
+//		CSVLoader loader = new CSVLoader(getCon());
+	
+		///////////////////////////////////
+		//
+		// init: vars
+		//
+		///////////////////////////////////
+		init_Vars();
+
+		//report
+//		String msg;
+		msg = String.format(Locale.JAPAN, "[%s : %d] CONS.Main.tm_Hins.size()=%d", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), CONS.Main.tm_Hins.size());
+
+		System.out.println(msg);
+		
+		
+		
+		///////////////////////////////////
+		//
+		// read
+		//
+		///////////////////////////////////
+//		read_CSV();
+		
+		///////////////////////////////////
+		//
+		// get: CSV file content
+		//
+		///////////////////////////////////
+		List<String[]> con = get_CSVContent();
+		
+		if (con == null) {
+			
+//			String msg;
+			msg = String.format(Locale.JAPAN, "[%s : %d] content => null", Thread
+					.currentThread().getStackTrace()[1].getFileName(), Thread
+					.currentThread().getStackTrace()[1].getLineNumber());
+
+			System.out.println(msg);
+			
+			return;
+			
+		} else {//if (con == null)
+			
+//			String msg;
+			msg = String.format(Locale.JAPAN, "[%s : %d] con.size()=%d", Thread
+					.currentThread().getStackTrace()[1].getFileName(), Thread
+					.currentThread().getStackTrace()[1].getLineNumber(), con.size());
+
+			System.out.println(msg);
+			
+			
+		}//if (con == null)
+		
+		///////////////////////////////////
+		//
+		// get: header
+		//
+		///////////////////////////////////
+		String[] hdr = con.get(0);
+		
+		// report
+		String hdr_Str = StringUtils.join(hdr, ",");
+		
+//		String msg;
+		msg = String.format(Locale.JAPAN, "[%s : %d] header=%s", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), hdr_Str);
+
+		System.out.println(msg);
+		
+		///////////////////////////////////
+		//
+		// get: hin names
+		//
+		///////////////////////////////////
+//		0	1			2		3	
+//		id,created_at,updated_at,form
+//		4	5		6	7		8		9			10		11	12		13			14
+//		hin,hin_1,hin_2,hin_3,katsu_kei,katsu_kata,genkei,yomi,hatsu,history_id,user_id
+		
+		List<String> list_Hins = new ArrayList<String>();
+		
+		String hin = null;
+		
+		int offset = 1;
+		
+		for (int i = 0 + offset; i < con.size(); i++) {
+//			for (int i = 0; i < con.size(); i++) {
+			
+			hin = con.get(i)[4];
+			
+			list_Hins.add(hin);
+			
+		}
+		
+		// report
+//		String msg;
+		msg = String.format(Locale.JAPAN, "[%s : %d] list_Hins.size()=%d", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), list_Hins.size());
+
+		System.out.println(msg);
+		
+//		for (int i = 0; i < 10; i++) {
+//			
+////			String msg;
+//			msg = String.format(Locale.JAPAN, "[%s : %d] list_Hins[%d]=%s", Thread
+//					.currentThread().getStackTrace()[1].getFileName(), Thread
+//					.currentThread().getStackTrace()[1].getLineNumber(), i, list_Hins.get(i));
+//
+//			System.out.println(msg);
+//			
+//			
+//		}
+		
+		///////////////////////////////////
+		//
+		// conv: hin names => unique
+		//
+		///////////////////////////////////
+		//REF http://stackoverflow.com/questions/13429119/get-unique-values-from-arraylist-in-java answered Nov 17 '12 at 9:11
+		Set<String> uniqueHins = new HashSet<String>(list_Hins);
+		
+		//report
+//		String msg;
+		msg = String.format(Locale.JAPAN, "[%s : %d] uniqueHins.size=%d", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), uniqueHins.size());
+
+		System.out.println(msg);
+		
+		Object[] uHins = uniqueHins.toArray();
+//		String[] uHins = (String[]) uniqueHins.toArray();
+		
+		//report
+//		String msg;
+		msg = String.format(Locale.JAPAN, "[%s : %d] uHins.length=%d", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), uHins.length);
+
+		System.out.println(msg);
+		
+		String tmp = StringUtils.join(uHins, ",");
+		
+//		String msg;
+		msg = String.format(Locale.JAPAN, "[%s : %d] tmp=%s", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), tmp);
+
+		System.out.println(msg);
+		
+
+		///////////////////////////////////
+		//
+		// close method
+		//
+		///////////////////////////////////
+//		String msg;
 		msg = String.format(Locale.JAPAN, "[%s : %d] done", Thread
 				.currentThread().getStackTrace()[1].getFileName(), Thread
 				.currentThread().getStackTrace()[1].getLineNumber());
@@ -25,11 +201,150 @@ public class TA {
 				.currentThread().getStackTrace()[1].getLineNumber());
 
 		System.out.println(msg);
+
+	}//main(String[] args)
+
 	
-		CSVLoader loader = new CSVLoader(getCon());
+	private static void 
+	init_Vars() {
+		// TODO Auto-generated method stub
+		
+		///////////////////////////////////
+		//
+		// hin name map
+		//
+		///////////////////////////////////
+		CONS.Main.tm_Hins = new TreeMap<String, String>();
+		
+//		接続詞,助動詞,名詞,形容詞,接頭詞,連体詞,感動詞,動詞,助詞,副詞,記号	
+//		接続詞,助動詞,名詞,形容詞,接頭詞,連体詞,感動詞,動詞,助詞,副詞,記号
+//		,,,,,,,,
+		//REF http://javarevisited.blogspot.jp/2011/12/treemap-java-tutorial-example-program.html
+		CONS.Main.tm_Hins.put("接続詞", "C");		// Connective
+		CONS.Main.tm_Hins.put("助動詞", "A");		// Auxiliary
+		CONS.Main.tm_Hins.put("名詞", "N");
+		
+		CONS.Main.tm_Hins.put("形容詞", "J");		// adJective
+		CONS.Main.tm_Hins.put("接頭詞", "FP");		// PreFix
+		CONS.Main.tm_Hins.put("連体詞", "T");		// renTai-shi
+		
+		CONS.Main.tm_Hins.put("感動詞", "E");		// Exclamation
+		CONS.Main.tm_Hins.put("動詞", "V");
+		CONS.Main.tm_Hins.put("助詞", "P");		// Particle
+		
+		CONS.Main.tm_Hins.put("副詞", "D");		// aDverb
+		CONS.Main.tm_Hins.put("記号", "S");		// Symbol
+		
+		
+		
+		
+	}//init_Vars
+
+	private static List<String[]> 
+	get_CSVContent() {
+		// TODO Auto-generated method stub
+	
+//		String fname = "data/tokens2.csv";
+		String fname = "data/tokens.csv";
+		
+		CSVReader cr = null;
+		
+		List<String[]> content = null;
+		
+		try {
+			
+			cr = new CSVReader(new FileReader(fname));
+			
+			content = cr.readAll();
+//			List content = cr.readAll();
+			
+			String[] con1 = content.get(0);
+			
+			String msg;
+			
+			if (con1 == null) {
+				
+				msg = "con1 => null";
+				
+			} else {//if (con1 == null)
+				
+//				msg = String.format(Locale.JAPAN, "[%s : %d] content[0].length=%d", Thread
+//						.currentThread().getStackTrace()[1].getFileName(), Thread
+//						.currentThread().getStackTrace()[1].getLineNumber(), content.get(0).length);
+				
+				msg = StringUtils.join(con1, "/");
+				
+			}//if (con1 == null)
+			
+			System.out.println(msg);
+			
+			cr.close();
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		///////////////////////////////////
+		//
+		// return
+		//
+		///////////////////////////////////
+		return content;
+		
+	}//get_CSVContent
+
+	private static void 
+	read_CSV() {
+		// TODO Auto-generated method stub
+		
+//		String fname = "data/tokens2.csv";
+		String fname = "data/tokens.csv";
+		
+		CSVReader cr = null;
+		
+		try {
+			
+			cr = new CSVReader(new FileReader(fname));
+			
+			List<String[]> content = cr.readAll();
+//			List content = cr.readAll();
+			
+			String[] con1 = content.get(0);
+			
+			String msg;
+			
+			if (con1 == null) {
+				
+				msg = "con1 => null";
+				
+			} else {//if (con1 == null)
+				
+//				msg = String.format(Locale.JAPAN, "[%s : %d] content[0].length=%d", Thread
+//						.currentThread().getStackTrace()[1].getFileName(), Thread
+//						.currentThread().getStackTrace()[1].getLineNumber(), content.get(0).length);
+				
+				msg = StringUtils.join(con1, "/");
+				
+			}//if (con1 == null)
+			
+			System.out.println(msg);
+			
+			cr.close();
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
-
+	
 	private static Connection getCon() {
         Connection connection = null;
         try {
