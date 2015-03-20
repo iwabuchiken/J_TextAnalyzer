@@ -1,0 +1,12 @@
+[sqlite3]
+dir data\*.db
+
+sqlite3 data\ta.db
+
+.explain on
+.tables
+
+pragma table_info(tokens);
+
+
+.exit

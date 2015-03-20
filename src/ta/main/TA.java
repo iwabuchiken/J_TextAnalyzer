@@ -18,6 +18,7 @@ import java.util.TreeMap;
 import org.apache.commons.lang.StringUtils;
 
 import ta.utils.CONS;
+import ta.utils.Methods;
 import au.com.bytecode.opencsv.CSVReader;
 
 public class TA {
@@ -38,7 +39,7 @@ public class TA {
 		// create: db file
 		//
 		///////////////////////////////////
-		setup_DBFile();
+//		setup_DBFile();		//=> can't create a db file programmatically
 		
 		///////////////////////////////////
 		//
@@ -223,7 +224,47 @@ public class TA {
 	setup_DBFile() {
 		// TODO Auto-generated method stub
 		
-	}
+		//REF http://www.linglom.com/programming/java/how-to-run-command-line-or-execute-external-application-from-java/
+		Runtime rt = Runtime.getRuntime();
+		
+		String cmd = null;
+		
+		String sqlite_path = "C:\\WORKS\\Programs\\sqlite_shell\\sqlite3.exe";
+		
+		String dfile = "C:\\WORKS\\WS\\Eclipse_Luna\\J_TextAnalyzer\\abc_%s.db";
+		
+		cmd = String.format(Locale.JAPAN, "%s %s", sqlite_path, dfile,
+//				cmd = String.format(Locale.JAPAN, "cmd /c %s %s", sqlite_path, dfile,
+//				cmd = String.format(Locale.JAPAN, "cmd /c %s abc_%s.db", sqlite_path,
+//				cmd = String.format(Locale.JAPAN, "cmd /c sqlite3 abc_%s.db", 
+//				cmd = String.format(Locale.JAPAN, "sqlite3 abc_%s.db", 		//=> java.io.IOException: Cannot run program "sqlite3": CreateProcess error=2, w肳ꂽt@
+//				cmd = String.format(Locale.JAPAN, "cmd /c sqlite3 abc_%s.db", 
+//				cmd = String.format(Locale.JAPAN, "cmd /c echo abc > abc_%s.txt", 
+//				cmd = String.format(Locale.JAPAN, "echo abc > abc_%s.txt", 
+				Methods.get_TimeLabel(Methods.getMillSeconds_now()));
+		
+//		cmd = "cmd /c echo hi";
+
+        //Process pr = rt.exec("cmd /c dir");
+        try {
+        	
+			Process pr = rt.exec(cmd);
+//			Process pr = rt.exec("c:\\helloworld.exe");
+			
+			String msg;
+			msg = String.format(Locale.JAPAN, "[%s : %d] cmd done => %s", Thread
+					.currentThread().getStackTrace()[1].getFileName(), Thread
+					.currentThread().getStackTrace()[1].getLineNumber(), cmd);
+
+			System.out.println(msg);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}//setup_DBFile
+	
 
 
 	private static void 
@@ -233,27 +274,53 @@ public class TA {
 		Connection connection = null;
         ResultSet resultSet = null;
         Statement statement = null;
+
+//        String dbCon = "jdbc:sqlite:C:\\WORKS\\WS\\Eclipse_Luna\\J_TextAnalyzer\\data\\ta.db";
         
+        String dbCon = String.format(
+        			Locale.JAPAN, 
+//        			"jdbc:sqlite:C:\\WORKS\\WS\\Eclipse_Luna\\J_TextAnalyzer\\data\\temp.db" 
+        			"jdbc:sqlite:C:\\WORKS\\WS\\Eclipse_Luna\\J_TextAnalyzer\\data\\%s", 
+        			CONS.DB.dbName
+//        			CONS.DB.dbName + "2"
+					);
+
         String sql = null;
         
         boolean res;
         
+        ///////////////////////////////////
+		//
+		// table
+		//
+		///////////////////////////////////
+		
         try {
         	
 			Class.forName("org.sqlite.JDBC");
 			
 			connection = DriverManager
-                    .getConnection("jdbc:sqlite:C:\\WORKS\\WS\\Eclipse_Luna\\J_TextAnalyzer\\data\\EMPLOYEE.db");
+                    .getConnection(dbCon);
+//			.getConnection("jdbc:sqlite:C:\\WORKS\\WS\\Eclipse_Luna\\J_TextAnalyzer\\data\\EMPLOYEE.db");
 //			.getConnection("jdbc:sqlite:C:\\SQLite\\EMPLOYEE.db");
 			
 			statement = connection.createStatement();
 			
 //			sql = "CREATE TABLE scientists (name VARCHAR(30));";
-			sql = "CREATE TABLE IF NOT EXISTS scientists (name VARCHAR(30));";
+			sql = StringUtils.join(CONS.DB.sql_CreateTable_Tokens, " ");
+//			sql = "CREATE TABLE IF N-OT EXISTS scientists (name VARCHAR(30));";
+			
+			String msg;
+			msg = String.format(Locale.JAPAN, "[%s : %d] executing sql... => %s", Thread
+					.currentThread().getStackTrace()[1].getFileName(), Thread
+					.currentThread().getStackTrace()[1].getLineNumber(), sql);
+
+			System.out.println(msg);
+			
 			
 			res = statement.execute(sql);
 			
-			String msg;
+//			String msg;
 			msg = String.format(Locale.JAPAN, "[%s : %d] sql=%s => res=%s", Thread
 					.currentThread().getStackTrace()[1].getFileName(), Thread
 					.currentThread().getStackTrace()[1].getLineNumber(), sql, res);
@@ -339,7 +406,8 @@ public class TA {
 		// TODO Auto-generated method stub
 	
 //		String fname = "data/tokens2.csv";
-		String fname = "data/tokens.csv";
+		String fname = CONS.DB.fpath_CSV_Tokens;
+//		String fname = "data/tokens.csv";
 		
 		CSVReader cr = null;
 		
