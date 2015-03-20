@@ -10,4 +10,10 @@ public class CONS {
 		
 	}
 	
+	public static class DB {
+		
+		public static String dbName = "ta.db";
+		
+	}
+	
 }

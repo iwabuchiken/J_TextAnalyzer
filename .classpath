@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="storage_TA/ReadWrite_CSV_Java_example/lib/jdom-1.0.jar"/>
 	<classpathentry kind="lib" path="storage_TA/ReadWrite_CSV_Java_example/lib/opencsv-2.3.jar"/>
 	<classpathentry kind="lib" path="libs/commons-lang-2.1.jar"/>
+	<classpathentry kind="lib" path="libs/sqlite-jdbc-3.7.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -5,7 +5,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -30,7 +32,14 @@ public class TA {
 		String msg;
 		
 //		CSVLoader loader = new CSVLoader(getCon());
-	
+
+		///////////////////////////////////
+		//
+		// create: db file
+		//
+		///////////////////////////////////
+		setup_DBFile();
+		
 		///////////////////////////////////
 		//
 		// init: vars
@@ -45,8 +54,13 @@ public class TA {
 				.currentThread().getStackTrace()[1].getLineNumber(), CONS.Main.tm_Hins.size());
 
 		System.out.println(msg);
-		
-		
+
+		///////////////////////////////////
+		//
+		// setup: database: sqlite3
+		//
+		///////////////////////////////////
+		setup_DB_Sqlite3();
 		
 		///////////////////////////////////
 		//
@@ -205,6 +219,86 @@ public class TA {
 	}//main(String[] args)
 
 	
+	private static void 
+	setup_DBFile() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	private static void 
+	setup_DB_Sqlite3() {
+		// TODO Auto-generated method stub
+		
+		Connection connection = null;
+        ResultSet resultSet = null;
+        Statement statement = null;
+        
+        String sql = null;
+        
+        boolean res;
+        
+        try {
+        	
+			Class.forName("org.sqlite.JDBC");
+			
+			connection = DriverManager
+                    .getConnection("jdbc:sqlite:C:\\WORKS\\WS\\Eclipse_Luna\\J_TextAnalyzer\\data\\EMPLOYEE.db");
+//			.getConnection("jdbc:sqlite:C:\\SQLite\\EMPLOYEE.db");
+			
+			statement = connection.createStatement();
+			
+//			sql = "CREATE TABLE scientists (name VARCHAR(30));";
+			sql = "CREATE TABLE IF NOT EXISTS scientists (name VARCHAR(30));";
+			
+			res = statement.execute(sql);
+			
+			String msg;
+			msg = String.format(Locale.JAPAN, "[%s : %d] sql=%s => res=%s", Thread
+					.currentThread().getStackTrace()[1].getFileName(), Thread
+					.currentThread().getStackTrace()[1].getLineNumber(), sql, res);
+
+			System.out.println(msg);
+			
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+		} finally {
+			
+            try {
+//                resultSet.close();
+//                statement.close();
+                connection.close();
+                
+                String msg;
+				msg = String.format(Locale.JAPAN, "[%s : %d] connection => closed", Thread
+						.currentThread().getStackTrace()[1].getFileName(),
+						Thread.currentThread().getStackTrace()[1]
+								.getLineNumber());
+
+				System.out.println(msg);
+				
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+        }//try
+		
+        String msg;
+		msg = String.format(Locale.JAPAN, "[%s : %d] setup: Sqlite3 => done", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber());
+
+		System.out.println(msg);
+		
+	}//setup_DB_Sqlite3
+
+
 	private static void 
 	init_Vars() {
 		// TODO Auto-generated method stub
