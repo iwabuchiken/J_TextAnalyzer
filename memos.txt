@@ -8,5 +8,6 @@ sqlite3 data\ta.db
 
 pragma table_info(tokens);
 
+SELECT * from tokens;
 
 .exit

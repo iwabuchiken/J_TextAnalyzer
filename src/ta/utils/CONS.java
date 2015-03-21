@@ -4,6 +4,12 @@ import java.util.TreeMap;
 
 public class CONS {
 
+	public static class Admin {
+		
+		public static final String format_Date = "yyyy/MM/dd HH:mm:ss.SSS";
+		
+	}
+	
 	public static class Main {
 		
 		public static TreeMap<String, String> tm_Hins;
@@ -47,7 +53,13 @@ public class CONS {
 				"yomi VARCHAR(20)", ",",
 				"hatsu VARCHAR(20)", ",",
 				"history_id INTEGER", ",",
-				"user_id INTEGER",
+				"user_id INTEGER", ",",
+				
+				"cake_id INTEGER", ",",
+				"remote_created_at VARCHAR(20)", ",",
+				"remote_updated_at VARCHAR(20)",
+				
+				
 //				"user_id INTEGER", ",",
 			")"
 			
@@ -59,6 +71,8 @@ public class CONS {
 		//
 		///////////////////////////////////
 		public static final String fpath_CSV_Tokens = "data/tokens.csv";
+		
+		public static final int numOf_CSV_HeaderLines = 1;
 		
 	}//public static class DB
 	

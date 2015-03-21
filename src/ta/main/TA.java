@@ -17,6 +17,7 @@ import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 
+import ta.items.Token;
 import ta.utils.CONS;
 import ta.utils.Methods;
 import au.com.bytecode.opencsv.CSVReader;
@@ -62,7 +63,7 @@ public class TA {
 		//
 		///////////////////////////////////
 		setup_DB_Sqlite3();
-		
+
 		///////////////////////////////////
 		//
 		// read
@@ -99,6 +100,55 @@ public class TA {
 			
 			
 		}//if (con == null)
+
+		//report
+		String[] tmp = con.get(1);
+
+		String s = StringUtils.join(tmp, ",");
+		
+//		String msg;
+		msg = String.format(Locale.JAPAN, "[%s : %d] tmp[1]=%s / tmp[2]=%s", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), 
+				tmp[1], tmp[2]
+				);
+
+		System.out.println(msg);
+		
+		
+//		String msg;
+		msg = String.format(Locale.JAPAN, "[%s : %d] s=%s", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), s);
+
+		System.out.println(msg);
+		
+		
+		///////////////////////////////////
+		//
+		// conv: content to a list of Token instances
+		//
+		///////////////////////////////////
+		List<Token> list_Tokens = Methods.conv_CSV_2_Tokens(con);
+		
+//		String msg;
+		msg = String.format(Locale.JAPAN, "[%s : %d] list_Tokens.size()=%d", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), list_Tokens.size());
+
+		System.out.println(msg);
+		
+		
+		///////////////////////////////////
+		//
+		// insert: db
+		//
+		///////////////////////////////////
+		int res_i = Methods.insertData_from_TokensList(
+						CONS.DB.dbName,
+						CONS.DB.tname_Tokens,
+						list_Tokens);
+		
 		
 		///////////////////////////////////
 		//
@@ -189,12 +239,12 @@ public class TA {
 
 		System.out.println(msg);
 		
-		String tmp = StringUtils.join(uHins, ",");
+		String tmp_s = StringUtils.join(uHins, ",");
 		
 //		String msg;
 		msg = String.format(Locale.JAPAN, "[%s : %d] tmp=%s", Thread
 				.currentThread().getStackTrace()[1].getFileName(), Thread
-				.currentThread().getStackTrace()[1].getLineNumber(), tmp);
+				.currentThread().getStackTrace()[1].getLineNumber(), tmp_s);
 
 		System.out.println(msg);
 		
