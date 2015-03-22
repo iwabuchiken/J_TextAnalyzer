@@ -9,5 +9,6 @@ sqlite3 data\ta.db
 pragma table_info(tokens);
 
 SELECT * from tokens;
+SELECT id,form,created_at FROM tokens WHERE id < 10;
 
 .exit

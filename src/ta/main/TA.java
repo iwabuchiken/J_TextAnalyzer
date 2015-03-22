@@ -49,13 +49,13 @@ public class TA {
 		///////////////////////////////////
 		init_Vars();
 
-		//report
-//		String msg;
-		msg = String.format(Locale.JAPAN, "[%s : %d] CONS.Main.tm_Hins.size()=%d", Thread
-				.currentThread().getStackTrace()[1].getFileName(), Thread
-				.currentThread().getStackTrace()[1].getLineNumber(), CONS.Main.tm_Hins.size());
-
-		System.out.println(msg);
+//		//report
+////		String msg;
+//		msg = String.format(Locale.JAPAN, "[%s : %d] CONS.Main.tm_Hins.size()=%d", Thread
+//				.currentThread().getStackTrace()[1].getFileName(), Thread
+//				.currentThread().getStackTrace()[1].getLineNumber(), CONS.Main.tm_Hins.size());
+//
+//		System.out.println(msg);
 
 		///////////////////////////////////
 		//
@@ -101,27 +101,27 @@ public class TA {
 			
 		}//if (con == null)
 
-		//report
-		String[] tmp = con.get(1);
-
-		String s = StringUtils.join(tmp, ",");
+//		//report
+//		String[] tmp = con.get(1);
+//
+//		String s = StringUtils.join(tmp, ",");
+//		
+////		String msg;
+//		msg = String.format(Locale.JAPAN, "[%s : %d] tmp[1]=%s / tmp[2]=%s", Thread
+//				.currentThread().getStackTrace()[1].getFileName(), Thread
+//				.currentThread().getStackTrace()[1].getLineNumber(), 
+//				tmp[1], tmp[2]
+//				);
+//
+//		System.out.println(msg);
 		
-//		String msg;
-		msg = String.format(Locale.JAPAN, "[%s : %d] tmp[1]=%s / tmp[2]=%s", Thread
-				.currentThread().getStackTrace()[1].getFileName(), Thread
-				.currentThread().getStackTrace()[1].getLineNumber(), 
-				tmp[1], tmp[2]
-				);
-
-		System.out.println(msg);
 		
-		
-//		String msg;
-		msg = String.format(Locale.JAPAN, "[%s : %d] s=%s", Thread
-				.currentThread().getStackTrace()[1].getFileName(), Thread
-				.currentThread().getStackTrace()[1].getLineNumber(), s);
-
-		System.out.println(msg);
+////		String msg;
+//		msg = String.format(Locale.JAPAN, "[%s : %d] s=%s", Thread
+//				.currentThread().getStackTrace()[1].getFileName(), Thread
+//				.currentThread().getStackTrace()[1].getLineNumber(), s);
+//
+//		System.out.println(msg);
 		
 		
 		///////////////////////////////////
@@ -138,34 +138,38 @@ public class TA {
 
 		System.out.println(msg);
 		
+		///////////////////////////////////
+		//
+		// show: tokens
+		//
+		///////////////////////////////////
+		show_Tokens();
 		
 		///////////////////////////////////
 		//
 		// insert: db
 		//
 		///////////////////////////////////
-		int res_i = Methods.insertData_from_TokensList(
-						CONS.DB.dbName,
-						CONS.DB.tname_Tokens,
-						list_Tokens);
-		
+//		insertData(list_Tokens);
 		
 		///////////////////////////////////
 		//
 		// get: header
 		//
 		///////////////////////////////////
-		String[] hdr = con.get(0);
+		get_Header(con);
 		
-		// report
-		String hdr_Str = StringUtils.join(hdr, ",");
-		
-//		String msg;
-		msg = String.format(Locale.JAPAN, "[%s : %d] header=%s", Thread
-				.currentThread().getStackTrace()[1].getFileName(), Thread
-				.currentThread().getStackTrace()[1].getLineNumber(), hdr_Str);
-
-		System.out.println(msg);
+//		String[] hdr = con.get(0);
+//		
+//		// report
+//		String hdr_Str = StringUtils.join(hdr, ",");
+//		
+////		String msg;
+//		msg = String.format(Locale.JAPAN, "[%s : %d] header=%s", Thread
+//				.currentThread().getStackTrace()[1].getFileName(), Thread
+//				.currentThread().getStackTrace()[1].getLineNumber(), hdr_Str);
+//
+//		System.out.println(msg);
 		
 		///////////////////////////////////
 		//
@@ -270,6 +274,130 @@ public class TA {
 	}//main(String[] args)
 
 	
+	private static void 
+	show_Tokens() {
+		// TODO Auto-generated method stub
+		
+		int hist_ID = 63;
+//		int hist_ID = 82;
+		
+		List<Token> list_Chosen = Methods.getTokens_HistoryID(hist_ID);
+		
+		if (list_Chosen == null) {
+			
+			String msg;
+			msg = String.format(Locale.JAPAN, "[%s : %d] token list => null", Thread
+					.currentThread().getStackTrace()[1].getFileName(), Thread
+					.currentThread().getStackTrace()[1].getLineNumber());
+
+			System.out.println(msg);
+		
+			return;
+			
+		} else {//if (list_Chosen == null)
+			
+			String msg;
+			msg = String.format(Locale.JAPAN, "[%s : %d] token list size => %d", Thread
+					.currentThread().getStackTrace()[1].getFileName(), Thread
+					.currentThread().getStackTrace()[1].getLineNumber(), list_Chosen.size());
+
+			System.out.println(msg);
+			
+			
+		}//if (list_Chosen == null)
+		
+		///////////////////////////////////
+		//
+		// show: sentence
+		//
+		///////////////////////////////////
+		List<String> list_Forms = new ArrayList<String>();
+		
+		for (int i = 0; i < list_Chosen.size(); i++) {
+			
+			list_Forms.add(list_Chosen.get(i).getForm());
+			
+		}
+		
+		Object[] strings = (Object[]) list_Forms.toArray();
+//		String[] strings = (String[]) list_Forms.toArray();
+		
+		String sen = StringUtils.join(strings, "");
+		
+		String msg;
+		msg = String.format(Locale.JAPAN, "[%s : %d] sen=%s", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), sen);
+
+		System.out.println(msg);
+		
+		
+	}//show_Tokens
+
+
+	private static void 
+	get_Header(List<String[]> con) {
+		// TODO Auto-generated method stub
+	
+		String msg;
+		
+		String[] hdr = con.get(0);
+		
+		// report
+		String hdr_Str = StringUtils.join(hdr, ",");
+		
+//		String msg;
+		msg = String.format(Locale.JAPAN, "[%s : %d] header=%s", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), hdr_Str);
+
+		System.out.println(msg);
+
+	}
+	
+
+
+	private static void 
+	insertData(List<Token> list_Tokens) {
+		// TODO Auto-generated method stub
+
+		String msg;
+		
+		long start = Methods.getMillSeconds_now();
+		
+		msg = String.format(Locale.JAPAN, "[%s : %d] Start: insert data: %s", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), 
+				Methods.conv_MillSec_to_TimeLabel(start));
+
+		System.out.println(msg);
+		
+		
+		int res_i = Methods.insertData_from_TokensList(
+						CONS.DB.dbName,
+						CONS.DB.tname_Tokens,
+						list_Tokens);
+		
+		long end = Methods.getMillSeconds_now();
+		
+		msg = String.format(Locale.JAPAN, "[%s : %d] End: insert data: %s", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), 
+				Methods.conv_MillSec_to_TimeLabel(end));
+		
+		System.out.println(msg);
+
+//		String msg;
+		msg = String.format(Locale.JAPAN, "[%s : %d] time=%s", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), 
+				Methods.conv_MillSec_to_ClockLabel(end - start));
+
+		System.out.println(msg);
+
+	}//insertData
+
+
 	private static void 
 	setup_DBFile() {
 		// TODO Auto-generated method stub
