@@ -33,29 +33,12 @@ public class TA {
 
 		String msg;
 		
-//		CSVLoader loader = new CSVLoader(getCon());
-
-		///////////////////////////////////
-		//
-		// create: db file
-		//
-		///////////////////////////////////
-//		setup_DBFile();		//=> can't create a db file programmatically
-		
 		///////////////////////////////////
 		//
 		// init: vars
 		//
 		///////////////////////////////////
 		init_Vars();
-
-//		//report
-////		String msg;
-//		msg = String.format(Locale.JAPAN, "[%s : %d] CONS.Main.tm_Hins.size()=%d", Thread
-//				.currentThread().getStackTrace()[1].getFileName(), Thread
-//				.currentThread().getStackTrace()[1].getLineNumber(), CONS.Main.tm_Hins.size());
-//
-//		System.out.println(msg);
 
 		///////////////////////////////////
 		//
@@ -64,13 +47,6 @@ public class TA {
 		///////////////////////////////////
 		setup_DB_Sqlite3();
 
-		///////////////////////////////////
-		//
-		// read
-		//
-		///////////////////////////////////
-//		read_CSV();
-		
 		///////////////////////////////////
 		//
 		// get: CSV file content
@@ -101,28 +77,6 @@ public class TA {
 			
 		}//if (con == null)
 
-//		//report
-//		String[] tmp = con.get(1);
-//
-//		String s = StringUtils.join(tmp, ",");
-//		
-////		String msg;
-//		msg = String.format(Locale.JAPAN, "[%s : %d] tmp[1]=%s / tmp[2]=%s", Thread
-//				.currentThread().getStackTrace()[1].getFileName(), Thread
-//				.currentThread().getStackTrace()[1].getLineNumber(), 
-//				tmp[1], tmp[2]
-//				);
-//
-//		System.out.println(msg);
-		
-		
-////		String msg;
-//		msg = String.format(Locale.JAPAN, "[%s : %d] s=%s", Thread
-//				.currentThread().getStackTrace()[1].getFileName(), Thread
-//				.currentThread().getStackTrace()[1].getLineNumber(), s);
-//
-//		System.out.println(msg);
-		
 		
 		///////////////////////////////////
 		//
@@ -159,100 +113,13 @@ public class TA {
 		///////////////////////////////////
 		get_Header(con);
 		
-//		String[] hdr = con.get(0);
-//		
-//		// report
-//		String hdr_Str = StringUtils.join(hdr, ",");
-//		
-////		String msg;
-//		msg = String.format(Locale.JAPAN, "[%s : %d] header=%s", Thread
-//				.currentThread().getStackTrace()[1].getFileName(), Thread
-//				.currentThread().getStackTrace()[1].getLineNumber(), hdr_Str);
-//
-//		System.out.println(msg);
-		
 		///////////////////////////////////
 		//
-		// get: hin names
+		// get: hin names(unique)
 		//
 		///////////////////////////////////
-//		0	1			2		3	
-//		id,created_at,updated_at,form
-//		4	5		6	7		8		9			10		11	12		13			14
-//		hin,hin_1,hin_2,hin_3,katsu_kei,katsu_kata,genkei,yomi,hatsu,history_id,user_id
+		Set<String> uniqueHins = get_HinNames(con);
 		
-		List<String> list_Hins = new ArrayList<String>();
-		
-		String hin = null;
-		
-		int offset = 1;
-		
-		for (int i = 0 + offset; i < con.size(); i++) {
-//			for (int i = 0; i < con.size(); i++) {
-			
-			hin = con.get(i)[4];
-			
-			list_Hins.add(hin);
-			
-		}
-		
-		// report
-//		String msg;
-		msg = String.format(Locale.JAPAN, "[%s : %d] list_Hins.size()=%d", Thread
-				.currentThread().getStackTrace()[1].getFileName(), Thread
-				.currentThread().getStackTrace()[1].getLineNumber(), list_Hins.size());
-
-		System.out.println(msg);
-		
-//		for (int i = 0; i < 10; i++) {
-//			
-////			String msg;
-//			msg = String.format(Locale.JAPAN, "[%s : %d] list_Hins[%d]=%s", Thread
-//					.currentThread().getStackTrace()[1].getFileName(), Thread
-//					.currentThread().getStackTrace()[1].getLineNumber(), i, list_Hins.get(i));
-//
-//			System.out.println(msg);
-//			
-//			
-//		}
-		
-		///////////////////////////////////
-		//
-		// conv: hin names => unique
-		//
-		///////////////////////////////////
-		//REF http://stackoverflow.com/questions/13429119/get-unique-values-from-arraylist-in-java answered Nov 17 '12 at 9:11
-		Set<String> uniqueHins = new HashSet<String>(list_Hins);
-		
-		//report
-//		String msg;
-		msg = String.format(Locale.JAPAN, "[%s : %d] uniqueHins.size=%d", Thread
-				.currentThread().getStackTrace()[1].getFileName(), Thread
-				.currentThread().getStackTrace()[1].getLineNumber(), uniqueHins.size());
-
-		System.out.println(msg);
-		
-		Object[] uHins = uniqueHins.toArray();
-//		String[] uHins = (String[]) uniqueHins.toArray();
-		
-		//report
-//		String msg;
-		msg = String.format(Locale.JAPAN, "[%s : %d] uHins.length=%d", Thread
-				.currentThread().getStackTrace()[1].getFileName(), Thread
-				.currentThread().getStackTrace()[1].getLineNumber(), uHins.length);
-
-		System.out.println(msg);
-		
-		String tmp_s = StringUtils.join(uHins, ",");
-		
-//		String msg;
-		msg = String.format(Locale.JAPAN, "[%s : %d] tmp=%s", Thread
-				.currentThread().getStackTrace()[1].getFileName(), Thread
-				.currentThread().getStackTrace()[1].getLineNumber(), tmp_s);
-
-		System.out.println(msg);
-		
-
 		///////////////////////////////////
 		//
 		// close method
@@ -274,6 +141,73 @@ public class TA {
 	}//main(String[] args)
 
 	
+	private static Set<String> 
+	get_HinNames(List<String[]> con) {
+		// TODO Auto-generated method stub
+		
+		String msg;
+		
+//		0	1			2		3	
+//		id,created_at,updated_at,form
+//		4	5		6	7		8		9			10		11	12		13			14
+//		hin,hin_1,hin_2,hin_3,katsu_kei,katsu_kata,genkei,yomi,hatsu,history_id,user_id
+		
+		List<String> list_Hins = new ArrayList<String>();
+		
+		String hin = null;
+		
+		int offset = 1;
+		
+		for (int i = 0 + offset; i < con.size(); i++) {
+//			for (int i = 0; i < con.size(); i++) {
+			
+			hin = con.get(i)[4];
+			
+			list_Hins.add(hin);
+			
+		}
+		
+		///////////////////////////////////
+		//
+		// conv: hin names => unique
+		//
+		///////////////////////////////////
+		//REF http://stackoverflow.com/questions/13429119/get-unique-values-from-arraylist-in-java answered Nov 17 '12 at 9:11
+		Set<String> uniqueHins = new HashSet<String>(list_Hins);
+		
+		//report
+//		String msg;
+		msg = String.format(Locale.JAPAN, "[%s : %d] uniqueHins.size=%d", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), uniqueHins.size());
+
+		System.out.println(msg);
+		
+		Object[] uHins = uniqueHins.toArray();
+		
+		//report
+//		String msg;
+		msg = String.format(Locale.JAPAN, "[%s : %d] uHins.length=%d", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), uHins.length);
+
+		System.out.println(msg);
+		
+		String tmp_s = StringUtils.join(uHins, ",");
+		
+//		String msg;
+		msg = String.format(Locale.JAPAN, "[%s : %d] tmp=%s", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), tmp_s);
+
+		System.out.println(msg);
+
+		return uniqueHins;
+		
+	}//get_HinNames(List<String[]> con)
+	
+
+
 	private static void 
 	show_Tokens() {
 		// TODO Auto-generated method stub
@@ -322,7 +256,8 @@ public class TA {
 		Object[] strings = (Object[]) list_Forms.toArray();
 //		String[] strings = (String[]) list_Forms.toArray();
 		
-		String sen = StringUtils.join(strings, "");
+		String sen = StringUtils.join(strings, " ");
+//		String sen = StringUtils.join(strings, "");
 		
 		String msg;
 		msg = String.format(Locale.JAPAN, "[%s : %d] sen=%s", Thread
@@ -331,6 +266,54 @@ public class TA {
 
 		System.out.println(msg);
 		
+		///////////////////////////////////
+		//
+		// symbols
+		//
+		///////////////////////////////////
+		Methods.add_Symbols_2_Tokens(list_Chosen);
+//		List<String> list_Symbols = Methods.add_Symbols_2_Tokens(list_Chosen);
+
+		String[] biSentence = Methods.conv_Tokens_2_BiSentence(list_Chosen);
+		
+//		String msg;
+		msg = String.format(Locale.JAPAN, "[%s : %d] sen.1=%s\nsen.2=%s", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), 
+				biSentence[0], biSentence[1]);
+
+		System.out.println(msg);
+		
+		
+//		Token t = list_Chosen.get(15);
+////		Token t = list_Chosen.get(10);
+//		
+////		String msg;
+//		msg = String.format(Locale.JAPAN, "[%s : %d] t.getSymbol()=%s / form=%s / hin=%s", Thread
+//				.currentThread().getStackTrace()[1].getFileName(), Thread
+//				.currentThread().getStackTrace()[1].getLineNumber(), t.getSymbol(), t.getForm(), t.getHin());
+//
+//		System.out.println(msg);
+		
+		
+////		String msg;
+//		msg = String.format(Locale.JAPAN, "[%s : %d] list_Symbols.size()=%d", Thread
+//				.currentThread().getStackTrace()[1].getFileName(), Thread
+//				.currentThread().getStackTrace()[1].getLineNumber(), list_Symbols.size());
+//
+//		System.out.println(msg);
+//		
+//		strings = (Object[]) list_Symbols.toArray();
+////		String[] strings = (String[]) list_Forms.toArray();
+//		
+//		sen = StringUtils.join(strings, " ");
+//		
+////		String msg;
+//		msg = String.format(Locale.JAPAN, "[%s : %d] sen=%s", Thread
+//				.currentThread().getStackTrace()[1].getFileName(), Thread
+//				.currentThread().getStackTrace()[1].getLineNumber(), sen);
+//		
+//		System.out.println(msg);
 		
 	}//show_Tokens
 

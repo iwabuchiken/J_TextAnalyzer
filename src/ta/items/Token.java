@@ -24,6 +24,8 @@ public class Token {
 	String remote_created_at;
 	String remote_updated_at;
 	
+	String symbol;
+	
 	public Token(Builder builder) {
 		// TODO Auto-generated constructor stub
 
@@ -47,7 +49,23 @@ public class Token {
 		this.remote_created_at	= builder.remote_created_at;
 		this.remote_updated_at	= builder.remote_updated_at;
 		
+		this.symbol		= builder.symbol;
 	}
+
+	
+
+
+	public String getSymbol() {
+		return symbol;
+	}
+
+
+
+
+	public void setSymbol(String symbol) {
+		this.symbol = symbol;
+	}
+
 
 
 
@@ -265,6 +283,7 @@ public class Token {
 	
 	public static class Builder {
 
+		String symbol;
 		int		id;
 		int		cake_id;
 		String	created_at;
@@ -291,6 +310,14 @@ public class Token {
 			
 		}
 		
+		
+		
+		public Builder setSymbol(String symbol) {
+			this.symbol = symbol; return this;
+		}
+
+
+
 		public Builder setId(int id) {
 			this.id = id; return this;
 		}

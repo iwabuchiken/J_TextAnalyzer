@@ -636,4 +636,100 @@ public class Methods {
 		
 	}//getTokens_HistoryID
 
+	public static int 
+	add_Symbols_2_Tokens(List<Token> list_Tokens) {
+		// TODO Auto-generated method stub
+		
+		List<String> list_Symbols = new ArrayList<String>();		
+		
+		Token t = null;
+		
+		int count = 0;
+		
+		for (int i = 0; i < list_Tokens.size(); i++) {
+			
+			t = list_Tokens.get(i);
+			
+//			list_Symbols.add(CONS.Main.tm_Hins.get(t.getHin()));
+			
+			list_Tokens.get(i).setSymbol(CONS.Main.tm_Hins.get(t.getHin()));
+			
+			count ++;
+			
+		}
+		
+		return count;
+		
+	}//conv_Tokens_2_Symbols(List<Token> list_Tokens)
+
+	
+	public static String[] 
+	conv_Tokens_2_BiSentence
+	(List<Token> list_Tokens) {
+		// TODO Auto-generated method stub
+		
+		String[] biSen = new String[2];
+		
+		StringBuilder nl_Sen = new StringBuilder();		// Natural Language sentece:	"強盗 殺人 事件 の 裁判 員 裁判 の"
+		StringBuilder sym_Sen = new StringBuilder();	// Symbol sentence:				"N N N P N N"
+		StringBuilder sym_Sen_space = new StringBuilder();	// Symbol sentence with space
+
+		Token t = null;
+		
+		for (int i = 0; i < list_Tokens.size(); i++) {
+			
+			t = list_Tokens.get(i);
+
+			///////////////////////////////////
+			//
+			// natural language
+			//
+			///////////////////////////////////
+			nl_Sen.append(t.getForm());
+
+			///////////////////////////////////
+			//
+			// symbol
+			//
+			///////////////////////////////////
+			sym_Sen_space.append(t.getSymbol());
+			
+			
+//			for (int j = 0; j < t.getForm().length() * 2; j++) {
+			for (int j = 0; j < t.getForm().length() * 2 - 1; j++) {
+//				for (int j = 0; j < t.getForm().length() - 1; j++) {
+				
+				sym_Sen_space.append(" ");
+				
+			}
+			
+//			sym_Sen_space.append(" ");
+			
+			sym_Sen.append(sym_Sen_space.toString());
+			
+			// spacing
+//			sym_Sen.append(" ");
+			
+			///////////////////////////////////
+			//
+			// clear: sym_Sen_space
+			//
+			///////////////////////////////////
+			//REF http://stackoverflow.com/questions/5192512/how-can-i-clear-or-empty-a-stringbuilder
+			sym_Sen_space.setLength(0);
+			
+		}
+		
+		///////////////////////////////////
+		//
+		// build
+		//
+		///////////////////////////////////
+		biSen[0] = nl_Sen.toString();
+		biSen[1] = sym_Sen.toString();
+		
+		return biSen;
+		
+	}//conv_Tokens_2_BiSentence
+
 }
