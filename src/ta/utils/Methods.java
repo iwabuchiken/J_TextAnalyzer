@@ -1,5 +1,10 @@
 package ta.utils;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -640,11 +645,14 @@ public class Methods {
 	add_Symbols_2_Tokens(List<Token> list_Tokens) {
 		// TODO Auto-generated method stub
 		
-		List<String> list_Symbols = new ArrayList<String>();		
+		List<Token> list_Symbols = new ArrayList<Token>();		
+//		List<String> list_Symbols = new ArrayList<String>();		
 		
 		Token t = null;
 		
 		int count = 0;
+		
+		String sym = null;
 		
 		for (int i = 0; i < list_Tokens.size(); i++) {
 			
@@ -652,11 +660,32 @@ public class Methods {
 			
 //			list_Symbols.add(CONS.Main.tm_Hins.get(t.getHin()));
 			
-			list_Tokens.get(i).setSymbol(CONS.Main.tm_Hins.get(t.getHin()));
+			sym = CONS.Main.tm_Hins.get(t.getHin());
+			
+			
+			
+			t.setSymbol(sym);
+//			t.setSymbol(CONS.Main.tm_Hins.get(t.getHin()));
+//			list_Tokens.get(i).setSymbol(CONS.Main.tm_Hins.get(t.getHin()));
+			
+			list_Symbols.add(t);
 			
 			count ++;
 			
+//			String msg;
+//			msg = String.format(Locale.JAPAN, "[%s : %d] form=%s / hin=%s / sym=%s", Thread
+//					.currentThread().getStackTrace()[1].getFileName(), Thread
+//					.currentThread().getStackTrace()[1].getLineNumber(), 
+//					t.getForm(), t.getHin(), CONS.Main.tm_Hins.get(t.getHin()));
+//
+//			System.out.println(msg);
+
+//			t = null;
+			
 		}
+		
+		list_Tokens.clear();
+		list_Tokens.addAll(list_Symbols);
 		
 		return count;
 		
@@ -674,7 +703,16 @@ public class Methods {
 		StringBuilder sym_Sen = new StringBuilder();	// Symbol sentence:				"N N N P N N"
 		StringBuilder sym_Sen_space = new StringBuilder();	// Symbol sentence with space
 
+		StringBuilder tmpSB = new StringBuilder();		// builder for list_Syms
+		
+		List<String> list_Forms = new ArrayList<String>();
+		List<String> list_Syms = new ArrayList<String>();
+		
 		Token t = null;
+		
+		String form = null;
+		
+		int len_Form;
 		
 		for (int i = 0; i < list_Tokens.size(); i++) {
 			
@@ -685,8 +723,17 @@ public class Methods {
 			// natural language
 			//
 			///////////////////////////////////
-			nl_Sen.append(t.getForm());
+			form = t.getForm();
+			
+			len_Form = form.length();
+			
+			nl_Sen.append(form);
 
+			list_Forms.add(form);
+//			nl_Sen.append(t.getForm());
+//			
+//			list_Forms.add(t.getForm());
+			
 			///////////////////////////////////
 			//
 			// symbol
@@ -694,6 +741,16 @@ public class Methods {
 			///////////////////////////////////
 			sym_Sen_space.append(t.getSymbol());
 			
+			tmpSB.append(t.getSymbol());
+			
+//			for (int j = 0; j < len_Form - 1; j++) {
+//				
+//				tmpSB.append(" ");
+//				
+//			}
+			
+			list_Syms.add(tmpSB.toString());
+//			list_Syms.add(t.getSymbol());
 			
 //			for (int j = 0; j < t.getForm().length() * 2; j++) {
 			for (int j = 0; j < t.getForm().length() * 2 - 1; j++) {
@@ -725,11 +782,255 @@ public class Methods {
 		// build
 		//
 		///////////////////////////////////
-		biSen[0] = nl_Sen.toString();
-		biSen[1] = sym_Sen.toString();
+//		biSen[0] = nl_Sen.toString();
+//		biSen[1] = sym_Sen.toString();
+		
+		// list
+		Object[] list_Form_ary = (Object[])list_Forms.toArray();
+		Object[] list_Syms_ary = (Object[])list_Syms.toArray();
+//		Object[] list_Form_ary = list_Forms.toArray();
+//		Object[] list_Syms_ary = list_Syms.toArray();
+		
+		String list_Forms_str = StringUtils.join(list_Form_ary, " ");
+		String list_Syms_str = StringUtils.join(list_Syms_ary, " ");
+		
+//		String msg;
+//		msg = String.format(Locale.JAPAN, "[%s : %d] forms=%s / syms=%s", Thread
+//				.currentThread().getStackTrace()[1].getFileName(), Thread
+//				.currentThread().getStackTrace()[1].getLineNumber(), list_Forms_str, list_Syms_str);
+//
+//		System.out.println(msg);
+
+		biSen[0] = list_Forms_str;
+		biSen[1] = list_Syms_str;
+
 		
 		return biSen;
 		
 	}//conv_Tokens_2_BiSentence
 
+	public static String[] 
+	conv_Tokens_2_BiSentence_V2
+	(List<Token> list_Tokens) {
+		// TODO Auto-generated method stub
+		
+		int size_List_Tokens = list_Tokens.size();
+		
+		StringBuilder tmpSB = new StringBuilder();		// builder for list_Syms
+		
+		List<String> list_Forms = new ArrayList<String>();
+		List<String> list_Syms = new ArrayList<String>();
+		
+		String[] list_Forms_ary2 = new String[size_List_Tokens];
+		String[] list_Syms_ary2 = new String[size_List_Tokens];
+		
+		
+		
+		Token t = null;
+		
+		String[] biSen = new String[2];
+		
+		String form = null;
+		String sym = null;
+		
+		int len_Form;
+		
+		int itr;
+		
+		for (int i = 0; i < list_Tokens.size(); i++) {
+			
+			t = list_Tokens.get(i);
+			
+			///////////////////////////////////
+			//
+			// natural language
+			//
+			///////////////////////////////////
+			form = t.getForm();
+			
+			len_Form = form.length();
+			
+			list_Forms.add(form);
+			
+			list_Forms_ary2[i] = form;
+			
+			///////////////////////////////////
+			//
+			// symbol
+			//
+			///////////////////////////////////
+//			tmpSB.append(t.getSymbol());
+			sym = t.getSymbol();
+			
+//			itr = len_Form * 2 - 1;
+			itr = len_Form * 2 - 1 + 1;		// "+ 1" => as a delimiter
+			
+//			for (int j = 0; j < itr + 1; j++) {		// "+ 1" => as a delimiter
+//				for (int j = 0; j < itr + 1; j++) {		// "+ 1" => as a delimiter
+				for (int j = 0; j < itr; j++) {
+//				for (int j = 0; j < (len_Form * 2 - 1); j++) {
+//				for (int j = 0; j < len_Form * 2 - 1; j++) {
+//				for (int j = 0; j < len_Form - 1; j++) {
+				
+//				tmpSB.append(" ");
+				sym += " ";
+				
+			}
+			
+//			sym = tmpSB.toString();
+			
+			String msg;
+			msg = String.format(Locale.JAPAN, "[%s : %d] len_Form=%d / sym=%s / t.symbol=%s", Thread
+					.currentThread().getStackTrace()[1].getFileName(), Thread
+					.currentThread().getStackTrace()[1].getLineNumber(), 
+					len_Form, sym, t.getSymbol());
+
+			System.out.println(msg);
+			
+			
+//			list_Syms.add(tmpSB.toString());
+//			list_Syms.add(t.getSymbol());
+			list_Syms.add(sym);
+			
+			list_Syms_ary2[i] = sym;
+			
+		}
+		
+		///////////////////////////////////
+		//
+		// build
+		//
+		///////////////////////////////////
+		// list
+		Object[] list_Form_ary = (Object[])list_Forms.toArray();
+		Object[] list_Syms_ary = (Object[])list_Syms.toArray();
+//		Object[] list_Form_ary = list_Forms.toArray();
+//		Object[] list_Syms_ary = list_Syms.toArray();
+		
+		String list_Forms_str = StringUtils.join(list_Form_ary, " ");
+		String list_Syms_str = StringUtils.join(list_Syms_ary, " ");
+		
+		biSen[0] = list_Forms_str;
+		biSen[1] = list_Syms_str;
+		
+//		//test
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append("abc");
+//
+//		for (int i = 0; i < 4; i++) {
+//			
+//			sb.append(" ");
+//			
+//		}
+		
+//		String msg;
+//		msg = String.format(Locale.JAPAN, "[%s : %d] sb=%s", Thread
+//				.currentThread().getStackTrace()[1].getFileName(), Thread
+//				.currentThread().getStackTrace()[1].getLineNumber(), sb.toString());
+//
+//		System.out.println(msg);
+		
+		String msg;
+		msg = String.format(Locale.JAPAN, "[%s : %d] form_ary_2=%s", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), StringUtils.join(list_Forms_ary2, " "));
+
+		System.out.println(msg);
+		
+		msg = String.format(Locale.JAPAN, "[%s : %d] sym_ary_2=%s", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), 
+				StringUtils.join(list_Syms_ary2, " "));
+		
+		System.out.println(msg);
+		
+//		String tmp_str = "";
+		
+		for (int i = 0; i < 10; i++) {
+			
+//			String msg;
+			msg = String.format(Locale.JAPAN, "[%s : %d] list_Syms_ary2[%d]=\"%s\"", Thread
+					.currentThread().getStackTrace()[1].getFileName(), Thread
+					.currentThread().getStackTrace()[1].getLineNumber(), i, list_Syms_ary2[i]);
+
+			System.out.println(msg);
+			
+//			tmp_str += list_Syms_ary2[i];
+			
+		}
+		
+////		String msg;
+//		msg = String.format(Locale.JAPAN, "[%s : %d] tmp_str=%s", Thread
+//				.currentThread().getStackTrace()[1].getFileName(), Thread
+//				.currentThread().getStackTrace()[1].getLineNumber(), tmp_str);
+//
+//		System.out.println(msg);
+		
+		String tmp_S = "";
+		
+		int i = 0;
+		
+		for (i = 0; i < list_Syms.size() - 1; i++) {
+			
+			tmp_S += list_Syms.get(i);
+			
+//			tmp_S += " ";
+			
+		}
+		
+		tmp_S += list_Syms.get(i);
+		
+//		String msg;
+		msg = String.format(Locale.JAPAN, "[%s : %d] tmp_S=%s", Thread
+				.currentThread().getStackTrace()[1].getFileName(), Thread
+				.currentThread().getStackTrace()[1].getLineNumber(), tmp_S);
+
+		System.out.println(msg);
+		
+		///////////////////////////////////
+		//
+		// write: file
+		//
+		///////////////////////////////////
+		String fname =  String.format(
+    			Locale.JAPAN, 
+    			"data/NVP_%s.txt", 
+    			Methods.get_TimeLabel(Methods.getMillSeconds_now())
+				);
+
+		File f = new File(fname);
+		
+		try {
+			
+			//REF http://www.mkyong.com/java/how-to-write-to-file-in-java-bufferedwriter-example/
+			BufferedWriter br = new BufferedWriter(new FileWriter(f));
+			
+			br.write(StringUtils.join(list_Forms_ary2, " "));
+			br.write("\n");
+			
+			br.write(tmp_S);
+			br.write("\n");
+			
+			br.write("done\n");
+			
+			br.close();
+			
+//			String msg;
+			msg = String.format(Locale.JAPAN, "[%s : %d] file written: %s", Thread
+					.currentThread().getStackTrace()[1].getFileName(), Thread
+					.currentThread().getStackTrace()[1].getLineNumber(), fname);
+
+			System.out.println(msg);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return biSen;
+		
+	}//conv_Tokens_2_BiSentence
+	
 }

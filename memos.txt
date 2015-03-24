@@ -12,3 +12,14 @@ SELECT * from tokens;
 SELECT id,form,created_at FROM tokens WHERE id < 10;
 
 .exit
+
+[java]
+pushd bin
+java TA -cp ta\main
+java ta.main.TA -cp libs;ta\main
+java ta.main.TA -cp C:\WORKS\WS\Eclipse_Luna\J_TextAnalyzer\libs;ta\main
+java ta.main.TA -cp C:\WORKS\WS\Eclipse_Luna\J_TextAnalyzer\libs\*;ta\main
+java ta.main.TA -cp C:\WORKS\WS\Eclipse_Luna\J_TextAnalyzer\libs\sqlite-jdbc-3.7.2.jar;ta\main
+
+[eclipse]
+ant build.xml	=> http://stackoverflow.com/questions/6422791/how-to-generate-build-xml-for-a-new-java-project

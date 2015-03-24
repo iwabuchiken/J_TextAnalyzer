@@ -274,7 +274,8 @@ public class TA {
 		Methods.add_Symbols_2_Tokens(list_Chosen);
 //		List<String> list_Symbols = Methods.add_Symbols_2_Tokens(list_Chosen);
 
-		String[] biSentence = Methods.conv_Tokens_2_BiSentence(list_Chosen);
+		String[] biSentence = Methods.conv_Tokens_2_BiSentence_V2(list_Chosen);
+//		String[] biSentence = Methods.conv_Tokens_2_BiSentence(list_Chosen);
 		
 //		String msg;
 		msg = String.format(Locale.JAPAN, "[%s : %d] sen.1=%s\nsen.2=%s", Thread
